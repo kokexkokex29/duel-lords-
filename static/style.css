@@ -1,0 +1,252 @@
+/* Custom styles for Duel Lords Tournament */
+
+/* Root variables for consistent theming */
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    --warning-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --info-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+/* Body and layout */
+body {
+    background-color: #0d1117;
+    color: #e6edf3;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Enhanced card hover effects */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Gradient backgrounds for hero sections */
+.jumbotron {
+    background: var(--primary-gradient) !important;
+    border-radius: 15px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Enhanced button styles */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Table enhancements */
+.table-dark {
+    background-color: #1c2128;
+}
+
+.table-dark td, .table-dark th {
+    border-color: #373e47;
+    padding: 12px;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #21262d;
+}
+
+/* Badge styling */
+.badge {
+    font-size: 0.75em;
+    font-weight: 500;
+    padding: 0.5em 0.75em;
+    border-radius: 6px;
+}
+
+/* Progress bar styling */
+.progress {
+    background-color: #21262d;
+    border-radius: 4px;
+}
+
+.progress-bar {
+    transition: width 0.6s ease;
+}
+
+/* Navigation enhancements */
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.nav-link {
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #58a6ff !important;
+}
+
+/* Card header enhancements */
+.card-header {
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Modal enhancements */
+.modal-content {
+    background-color: #1c2128;
+    border: 1px solid #373e47;
+    border-radius: 12px;
+}
+
+.modal-header {
+    border-bottom: 1px solid #373e47;
+}
+
+.modal-footer {
+    border-top: 1px solid #373e47;
+}
+
+/* Toast notifications */
+.toast {
+    border-radius: 8px;
+}
+
+/* Loading animation */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.loading {
+    animation: pulse 2s infinite;
+}
+
+/* Enhanced leaderboard podium */
+.podium-card {
+    transform: translateY(-10px);
+    border: 2px solid #f7931e;
+    box-shadow: 0 15px 35px rgba(247, 147, 30, 0.3);
+}
+
+/* Player cards grid layout */
+.player-grid .card {
+    min-height: 300px;
+}
+
+/* Statistics cards */
+.stat-card {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+}
+
+/* Tournament status indicator */
+.status-online {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: #28a745;
+    border-radius: 50%;
+    margin-right: 5px;
+    animation: pulse 2s infinite;
+}
+
+/* Responsive design improvements */
+@media (max-width: 768px) {
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    .display-5 {
+        font-size: 1.5rem;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+}
+
+/* Dark theme scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #21262d;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #58a6ff;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #388bfd;
+}
+
+/* Code snippets styling */
+code {
+    background-color: #21262d;
+    color: #58a6ff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+/* Enhanced form styling */
+.form-control {
+    background-color: #21262d;
+    border-color: #373e47;
+    color: #e6edf3;
+}
+
+.form-control:focus {
+    background-color: #21262d;
+    border-color: #58a6ff;
+    color: #e6edf3;
+    box-shadow: 0 0 0 0.2rem rgba(88, 166, 255, 0.25);
+}
+
+/* Alert styling */
+.alert {
+    border-radius: 8px;
+    border: none;
+}
+
+.alert-info {
+    background-color: #0c4a6e;
+    color: #7dd3fc;
+}
+
+/* Footer styling */
+footer {
+    background-color: #0d1117 !important;
+    border-top: 1px solid #21262d;
+}
+
+/* Enhanced icon styling */
+.fa-crown {
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.fa-medal {
+    text-shadow: 0 0 10px rgba(192, 192, 192, 0.5);
+}
+
+.fa-award {
+    color: #cd7f32;
+    text-shadow: 0 0 10px rgba(205, 127, 50, 0.5);
+}

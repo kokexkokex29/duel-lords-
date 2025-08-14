@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Duel Lords Tournament{% endblock %}</title>
+    
+    <!-- Bootstrap CSS with dark theme -->
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <meta name="description" content="Duel Lords - BombSquad Tournament Management System">
+    <meta name="keywords" content="BombSquad, Tournament, Gaming, Duels, Leaderboard">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">
+                <i class="fas fa-crown text-warning me-2"></i>
+                Duel Lords
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">
+                            <i class="fas fa-home me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('leaderboard') }}">
+                            <i class="fas fa-trophy me-1"></i>Leaderboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('players') }}">
+                            <i class="fas fa-users me-1"></i>Players
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#serverModal">
+                            <i class="fas fa-server me-1"></i>Server Info
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="py-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-center py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h6><i class="fas fa-crown text-warning"></i> Duel Lords</h6>
+                    <p class="text-muted small">BombSquad Tournament Platform</p>
+                </div>
+                <div class="col-md-4">
+                    <h6><i class="fas fa-gamepad"></i> Game Info</h6>
+                    <p class="text-muted small">Official BombSquad Tournaments</p>
+                </div>
+                <div class="col-md-4">
+                    <h6><i class="fas fa-robot"></i> Discord Bot</h6>
+                    <p class="text-muted small">Tournament Management System</p>
+                </div>
+            </div>
+            <hr class="my-3">
+            <p class="text-muted small mb-0">
+                © 2025 Duel Lords Tournament. Powered by Discord & Flask.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Server Info Modal -->
+    <div class="modal fade" id="serverModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-server text-success me-2"></i>
+                        BombSquad Server Information
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card bg-dark border-success mb-3">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-globe text-info"></i> IP Address
+                                        </h6>
+                                        <h4 class="text-success font-monospace">18.228.228.44</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-dark border-warning mb-3">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-plug text-warning"></i> Port
+                                        </h6>
+                                        <h4 class="text-warning font-monospace">3827</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card bg-dark border-primary">
+                            <div class="card-body">
+                                <h6 class="card-title">
+                                    <i class="fas fa-copy text-primary"></i> Full Address
+                                </h6>
+                                <h3 class="text-primary font-monospace">18.228.228.44:3827</h3>
+                                <button class="btn btn-outline-primary btn-sm mt-2" onclick="copyToClipboard('18.228.228.44:3827')">
+                                    <i class="fas fa-copy me-1"></i>Copy Address
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Copy to clipboard function
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                // Show success message
+                const toast = document.createElement('div');
+                toast.className = 'toast align-items-center text-bg-success border-0 position-fixed top-0 end-0 m-3';
+                toast.style.zIndex = '9999';
+                toast.innerHTML = `
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="fas fa-check me-2"></i>Copied to clipboard!
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                `;
+                document.body.appendChild(toast);
+                const bsToast = new bootstrap.Toast(toast);
+                bsToast.show();
+                
+                // Remove toast after it's hidden
+                toast.addEventListener('hidden.bs.toast', () => {
+                    document.body.removeChild(toast);
+                });
+            });
+        }
+
+        // Auto-refresh data every 30 seconds
+        setInterval(function() {
+            if (typeof refreshData === 'function') {
+                refreshData();
+            }
+        }, 30000);
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

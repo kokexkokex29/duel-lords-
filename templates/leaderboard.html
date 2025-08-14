@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% block title %}Leaderboard - Duel Lords Tournament{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="text-center">
+                <h1 class="display-5 fw-bold">
+                    <i class="fas fa-trophy text-warning me-3"></i>
+                    Tournament Leaderboard
+                </h1>
+                <p class="lead text-muted">
+                    Rankings of all tournament participants
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {% if players %}
+    <!-- Top 3 Podium -->
+    {% set top_3 = players[:3] %}
+    {% if top_3|length >= 3 %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="text-center mb-4">
+                <i class="fas fa-medal text-warning me-2"></i>
+                Top 3 Champions
+            </h3>
+            <div class="row justify-content-center">
+                <!-- 2nd Place -->
+                <div class="col-md-3 mb-4 order-1 order-md-1">
+                    <div class="card bg-dark border-light h-100">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-medal fa-3x text-light"></i>
+                                <h4 class="mt-2 mb-0">#2</h4>
+                            </div>
+                            <h5 class="card-title">{{ top_3[1].player_name }}</h5>
+                            <h3 class="text-light">{{ top_3[1].points }} pts</h3>
+                            <p class="text-muted small mb-2">
+                                W/L/D: {{ top_3[1].wins }}/{{ top_3[1].losses }}/{{ top_3[1].draws }}
+                            </p>
+                            <p class="text-muted small">
+                                K/D: {{ "%.2f"|format(top_3[1].kills / top_3[1].deaths if top_3[1].deaths > 0 else top_3[1].kills) }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1st Place -->
+                <div class="col-md-4 mb-4 order-0 order-md-2">
+                    <div class="card bg-dark border-warning h-100" style="transform: translateY(-20px);">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-crown fa-4x text-warning"></i>
+                                <h3 class="mt-2 mb-0 text-warning">#1</h3>
+                            </div>
+                            <h4 class="card-title text-warning">{{ top_3[0].player_name }}</h4>
+                            <h2 class="text-warning">{{ top_3[0].points }} pts</h2>
+                            <p class="text-muted mb-2">
+                                W/L/D: {{ top_3[0].wins }}/{{ top_3[0].losses }}/{{ top_3[0].draws }}
+                            </p>
+                            <p class="text-muted">
+                                K/D: {{ "%.2f"|format(top_3[0].kills / top_3[0].deaths if top_3[0].deaths > 0 else top_3[0].kills) }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3rd Place -->
+                <div class="col-md-3 mb-4 order-2 order-md-3">
+                    <div class="card bg-dark border-warning h-100">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-award fa-3x text-warning"></i>
+                                <h4 class="mt-2 mb-0">#3</h4>
+                            </div>
+                            <h5 class="card-title">{{ top_3[2].player_name }}</h5>
+                            <h3 class="text-warning">{{ top_3[2].points }} pts</h3>
+                            <p class="text-muted small mb-2">
+                                W/L/D: {{ top_3[2].wins }}/{{ top_3[2].losses }}/{{ top_3[2].draws }}
+                            </p>
+                            <p class="text-muted small">
+                                K/D: {{ "%.2f"|format(top_3[2].kills / top_3[2].deaths if top_3[2].deaths > 0 else top_3[2].kills) }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Full Leaderboard Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-dark">
+                <div class="card-header bg-primary">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list-ol me-2"></i>
+                        Complete Rankings
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover mb-0">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th scope="col" class="text-center">#</th>
+                                    <th scope="col">Player</th>
+                                    <th scope="col" class="text-center">Points</th>
+                                    <th scope="col" class="text-center">Wins</th>
+                                    <th scope="col" class="text-center">Losses</th>
+                                    <th scope="col" class="text-center">Draws</th>
+                                    <th scope="col" class="text-center">K/D Ratio</th>
+                                    <th scope="col" class="text-center">Win Rate</th>
+                                    <th scope="col" class="text-center">Matches</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for player in players %}
+                                {% set total_matches = player.wins + player.losses + player.draws %}
+                                {% set win_rate = (player.wins / total_matches * 100) if total_matches > 0 else 0 %}
+                                {% set kd_ratio = (player.kills / player.deaths) if player.deaths > 0 else player.kills %}
+                                <tr class="{% if loop.index <= 3 %}table-warning{% endif %}">
+                                    <td class="text-center fw-bold">
+                                        {% if loop.index == 1 %}
+                                            <i class="fas fa-crown text-warning"></i> {{ loop.index }}
+                                        {% elif loop.index == 2 %}
+                                            <i class="fas fa-medal text-light"></i> {{ loop.index }}
+                                        {% elif loop.index == 3 %}
+                                            <i class="fas fa-award text-warning"></i> {{ loop.index }}
+                                        {% else %}
+                                            {{ loop.index }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="fw-bold">{{ player.player_name }}</td>
+                                    <td class="text-center">
+                                        <span class="badge bg-primary fs-6">{{ player.points }}</span>
+                                    </td>
+                                    <td class="text-center text-success">{{ player.wins }}</td>
+                                    <td class="text-center text-danger">{{ player.losses }}</td>
+                                    <td class="text-center text-warning">{{ player.draws }}</td>
+                                    <td class="text-center">
+                                        <span class="badge bg-info">{{ "%.2f"|format(kd_ratio) }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        {% if win_rate >= 70 %}
+                                            <span class="badge bg-success">{{ "%.1f"|format(win_rate) }}%</span>
+                                        {% elif win_rate >= 50 %}
+                                            <span class="badge bg-warning">{{ "%.1f"|format(win_rate) }}%</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ "%.1f"|format(win_rate) }}%</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center text-muted">{{ total_matches }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Summary -->
+    <div class="row mt-5">
+        <div class="col-md-3 mb-3">
+            <div class="card bg-dark border-primary">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-2x text-primary mb-2"></i>
+                    <h4 class="text-primary">{{ players|length }}</h4>
+                    <p class="text-muted mb-0">Total Players</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-dark border-success">
+                <div class="card-body text-center">
+                    <i class="fas fa-trophy fa-2x text-success mb-2"></i>
+                    <h4 class="text-success">{{ players[0].points if players else 0 }}</h4>
+                    <p class="text-muted mb-0">Highest Points</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-dark border-warning">
+                <div class="card-body text-center">
+                    <i class="fas fa-fire fa-2x text-warning mb-2"></i>
+                    <h4 class="text-warning">{{ players|sum(attribute='wins') }}</h4>
+                    <p class="text-muted mb-0">Total Wins</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-dark border-info">
+                <div class="card-body text-center">
+                    <i class="fas fa-gamepad fa-2x text-info mb-2"></i>
+                    <h4 class="text-info">{{ (players|sum(attribute='wins') + players|sum(attribute='losses') + players|sum(attribute='draws')) // 2 }}</h4>
+                    <p class="text-muted mb-0">Total Matches</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <!-- No Players Message -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-dark border-warning">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-users-slash fa-4x text-warning mb-4"></i>
+                    <h3 class="text-warning">No Players Registered</h3>
+                    <p class="text-muted">
+                        Tournament participants will appear here once they are registered by administrators.
+                    </p>
+                    <p class="text-muted">
+                        Use the <code>/register</code> Discord command to add players to the tournament.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function refreshData() {
+        fetch('/api/leaderboard')
+            .then(response => response.json())
+            .then(data => {
+                if (data.players && data.players.length > 0) {
+                    // Refresh the page to update leaderboard
+                    location.reload();
+                }
+            })
+            .catch(error => console.log('Error refreshing leaderboard:', error));
+    }
+</script>
+{% endblock %}

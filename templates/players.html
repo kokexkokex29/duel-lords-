@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+
+{% block title %}Players - Duel Lords Tournament{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="text-center">
+                <h1 class="display-5 fw-bold">
+                    <i class="fas fa-users text-primary me-3"></i>
+                    Tournament Players
+                </h1>
+                <p class="lead text-muted">
+                    All registered tournament participants and match history
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Players Grid -->
+    {% if players %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="mb-4">
+                <i class="fas fa-gamepad text-success me-2"></i>
+                Registered Players ({{ players|length }})
+            </h3>
+            <div class="row">
+                {% for player in players %}
+                {% set total_matches = player.wins + player.losses + player.draws %}
+                {% set win_rate = (player.wins / total_matches * 100) if total_matches > 0 else 0 %}
+                {% set kd_ratio = (player.kills / player.deaths) if player.deaths > 0 else player.kills %}
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card bg-dark border-secondary h-100">
+                        <div class="card-header bg-secondary">
+                            <h6 class="mb-0 fw-bold">
+                                <i class="fas fa-user-circle me-2"></i>
+                                {{ player.player_name }}
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <!-- Main Stats -->
+                            <div class="row text-center mb-3">
+                                <div class="col-4">
+                                    <h5 class="text-primary mb-1">{{ player.points }}</h5>
+                                    <small class="text-muted">Points</small>
+                                </div>
+                                <div class="col-4">
+                                    <h5 class="text-success mb-1">{{ player.wins }}</h5>
+                                    <small class="text-muted">Wins</small>
+                                </div>
+                                <div class="col-4">
+                                    <h5 class="text-info mb-1">{{ total_matches }}</h5>
+                                    <small class="text-muted">Matches</small>
+                                </div>
+                            </div>
+
+                            <!-- Win/Loss/Draw Bar -->
+                            <div class="mb-3">
+                                {% if total_matches > 0 %}
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-success" style="width: {{ (player.wins / total_matches * 100) }}%"></div>
+                                    <div class="progress-bar bg-danger" style="width: {{ (player.losses / total_matches * 100) }}%"></div>
+                                    <div class="progress-bar bg-warning" style="width: {{ (player.draws / total_matches * 100) }}%"></div>
+                                </div>
+                                <small class="text-muted">
+                                    W: {{ player.wins }} | L: {{ player.losses }} | D: {{ player.draws }}
+                                </small>
+                                {% else %}
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-secondary" style="width: 100%"></div>
+                                </div>
+                                <small class="text-muted">No matches played</small>
+                                {% endif %}
+                            </div>
+
+                            <!-- Additional Stats -->
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <small class="text-muted">K/D Ratio</small>
+                                    <p class="mb-1 fw-bold">{{ "%.2f"|format(kd_ratio) }}</p>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Win Rate</small>
+                                    <p class="mb-1 fw-bold">{{ "%.1f"|format(win_rate) }}%</p>
+                                </div>
+                            </div>
+
+                            <!-- Combat Stats -->
+                            <div class="mt-3 text-center">
+                                <span class="badge bg-success me-1">
+                                    <i class="fas fa-crosshairs me-1"></i>{{ player.kills }} Kills
+                                </span>
+                                <span class="badge bg-danger">
+                                    <i class="fas fa-skull me-1"></i>{{ player.deaths }} Deaths
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-dark border-top border-secondary">
+                            <small class="text-muted">
+                                <i class="fas fa-calendar me-1"></i>
+                                Joined: {{ player.created_at[:10] if player.created_at else 'N/A' }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <!-- No Players Message -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card bg-dark border-warning">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-user-plus fa-4x text-warning mb-4"></i>
+                    <h3 class="text-warning">No Players Registered</h3>
+                    <p class="text-muted">
+                        Tournament participants will appear here once they are registered.
+                    </p>
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-info-circle me-2"></i>How to Register Players</h6>
+                        <p class="mb-0">
+                            Use the Discord command: <code>/register @player player_name</code>
+                            <br><small class="text-muted">(Admin only command)</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Recent Matches Section -->
+    {% if recent_matches %}
+    <div class="row">
+        <div class="col-12">
+            <h3 class="mb-4">
+                <i class="fas fa-history text-info me-2"></i>
+                Recent Match History
+            </h3>
+            <div class="card bg-dark">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover mb-0">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Player 1</th>
+                                    <th scope="col">Player 2</th>
+                                    <th scope="col" class="text-center">Result</th>
+                                    <th scope="col" class="text-center">Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for match in recent_matches %}
+                                <tr>
+                                    <td>
+                                        <small>{{ match.match_date[:16] if match.match_date else 'N/A' }}</small>
+                                    </td>
+                                    <td class="fw-bold">
+                                        {% if match.winner_id == match.player1_id %}
+                                            <i class="fas fa-crown text-warning me-1"></i>
+                                        {% endif %}
+                                        {{ match.player1_name }}
+                                    </td>
+                                    <td class="fw-bold">
+                                        {% if match.winner_id == match.player2_id %}
+                                            <i class="fas fa-crown text-warning me-1"></i>
+                                        {% endif %}
+                                        {{ match.player2_name }}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if match.winner_name %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-trophy me-1"></i>{{ match.winner_name }}
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-handshake me-1"></i>Draw
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <small class="text-muted">
+                                            {{ match.player1_kills }}K/{{ match.player1_deaths }}D
+                                            vs
+                                            {{ match.player2_kills }}K/{{ match.player2_deaths }}D
+                                        </small>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Player Statistics Summary -->
+    {% if players %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <h4 class="mb-4">
+                <i class="fas fa-chart-bar text-warning me-2"></i>
+                Tournament Statistics
+            </h4>
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-dark border-primary">
+                        <div class="card-body text-center">
+                            <i class="fas fa-users fa-2x text-primary mb-2"></i>
+                            <h4 class="text-primary">{{ players|length }}</h4>
+                            <p class="text-muted mb-0">Total Players</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-dark border-success">
+                        <div class="card-body text-center">
+                            <i class="fas fa-trophy fa-2x text-success mb-2"></i>
+                            <h4 class="text-success">{{ players|sum(attribute='wins') }}</h4>
+                            <p class="text-muted mb-0">Total Wins</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-dark border-warning">
+                        <div class="card-body text-center">
+                            <i class="fas fa-crosshairs fa-2x text-warning mb-2"></i>
+                            <h4 class="text-warning">{{ players|sum(attribute='kills') }}</h4>
+                            <p class="text-muted mb-0">Total Kills</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-dark border-info">
+                        <div class="card-body text-center">
+                            <i class="fas fa-gamepad fa-2x text-info mb-2"></i>
+                            <h4 class="text-info">{{ (players|sum(attribute='wins') + players|sum(attribute='losses') + players|sum(attribute='draws')) // 2 }}</h4>
+                            <p class="text-muted mb-0">Total Matches</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function refreshData() {
+        fetch('/api/stats')
+            .then(response => response.json())
+            .then(data => {
+                // Auto-refresh every 30 seconds to show updated data
+                if (data.total_players !== {{ players|length if players else 0 }}) {
+                    location.reload();
+                }
+            })
+            .catch(error => console.log('Error refreshing data:', error));
+    }
+</script>
+{% endblock %}

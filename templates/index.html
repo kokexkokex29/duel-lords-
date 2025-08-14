@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+
+{% block title %}Duel Lords - BombSquad Tournament{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="jumbotron bg-gradient text-center py-5 rounded-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="container">
+                    <h1 class="display-4 fw-bold text-white mb-3">
+                        <i class="fas fa-crown text-warning me-3"></i>
+                        Welcome to Duel Lords
+                    </h1>
+                    <p class="lead text-white-50 mb-4">
+                        The ultimate BombSquad tournament management platform
+                    </p>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="row text-center">
+                                <div class="col-md-4">
+                                    <h3 class="text-warning">{{ total_players }}</h3>
+                                    <p class="text-white-50">Registered Players</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h3 class="text-success">{{ recent_matches|length }}</h3>
+                                    <p class="text-white-50">Recent Matches</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h3 class="text-info">24/7</h3>
+                                    <p class="text-white-50">Bot Active</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">
+                <i class="fas fa-star text-warning me-2"></i>
+                Tournament Features
+            </h2>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 bg-dark border-primary">
+                <div class="card-body text-center">
+                    <i class="fas fa-trophy fa-3x text-warning mb-3"></i>
+                    <h5 class="card-title">Tournament Management</h5>
+                    <p class="card-text text-muted">
+                        Complete tournament system with player registration, match scheduling, and automated reminders.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 bg-dark border-success">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-line fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Player Statistics</h5>
+                    <p class="card-text text-muted">
+                        Track wins, losses, kills, deaths, and comprehensive player rankings with detailed analytics.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 bg-dark border-info">
+                <div class="card-body text-center">
+                    <i class="fas fa-robot fa-3x text-info mb-3"></i>
+                    <h5 class="card-title">Discord Integration</h5>
+                    <p class="card-text text-muted">
+                        Seamless Discord bot with slash commands, embeds, and automatic match notifications.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Players Section -->
+    {% if top_players %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="mb-4">
+                <i class="fas fa-medal text-warning me-2"></i>
+                Top Performers
+            </h3>
+            <div class="row">
+                {% for player in top_players %}
+                <div class="col-md-4 mb-3">
+                    <div class="card bg-dark border-{{ 'warning' if loop.index == 1 else 'light' }}">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    {% if loop.index == 1 %}
+                                        <i class="fas fa-crown fa-2x text-warning"></i>
+                                    {% elif loop.index == 2 %}
+                                        <i class="fas fa-medal fa-2x text-light"></i>
+                                    {% else %}
+                                        <i class="fas fa-award fa-2x text-warning"></i>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <h6 class="card-title mb-1">{{ player.player_name }}</h6>
+                                    <p class="text-muted small mb-1">
+                                        Points: <span class="text-warning">{{ player.points }}</span>
+                                    </p>
+                                    <p class="text-muted small mb-0">
+                                        W/L/D: {{ player.wins }}/{{ player.losses }}/{{ player.draws }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Recent Matches Section -->
+    {% if recent_matches %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="mb-4">
+                <i class="fas fa-history text-info me-2"></i>
+                Recent Matches
+            </h3>
+            <div class="card bg-dark">
+                <div class="card-body">
+                    {% for match in recent_matches %}
+                    <div class="d-flex justify-content-between align-items-center py-2 {% if not loop.last %}border-bottom border-secondary{% endif %}">
+                        <div>
+                            <strong>{{ match.player1_name }}</strong>
+                            <span class="text-muted">vs</span>
+                            <strong>{{ match.player2_name }}</strong>
+                        </div>
+                        <div class="text-end">
+                            {% if match.winner_name %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-trophy me-1"></i>{{ match.winner_name }}
+                                </span>
+                            {% else %}
+                                <span class="badge bg-warning">
+                                    <i class="fas fa-handshake me-1"></i>Draw
+                                </span>
+                            {% endif %}
+                            <small class="text-muted d-block">
+                                {{ match.match_date[:16] if match.match_date else 'N/A' }}
+                            </small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Discord Bot Commands Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="mb-4">
+                <i class="fab fa-discord text-primary me-2"></i>
+                Discord Bot Commands
+            </h3>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="card bg-dark border-primary">
+                        <div class="card-header bg-primary">
+                            <h6 class="mb-0">
+                                <i class="fas fa-user-plus me-2"></i>
+                                Player Commands
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled mb-0">
+                                <li><code>/stats [@player]</code> - View player statistics</li>
+                                <li><code>/leaderboard</code> - Show tournament rankings</li>
+                                <li><code>/players</code> - List all registered players</li>
+                                <li><code>/ip</code> - Display server IP and port</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card bg-dark border-warning">
+                        <div class="card-header bg-warning text-dark">
+                            <h6 class="mb-0">
+                                <i class="fas fa-shield-alt me-2"></i>
+                                Admin Commands
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled mb-0">
+                                <li><code>/register @player name</code> - Register player</li>
+                                <li><code>/remove_player @player</code> - Remove player</li>
+                                <li><code>/update_stats</code> - Update match results</li>
+                                <li><code>/duel @p1 @p2 day hour min</code> - Schedule match</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Server Status -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-dark border-success">
+                <div class="card-body text-center">
+                    <h4 class="text-success mb-3">
+                        <i class="fas fa-check-circle me-2"></i>
+                        Bot Status: Online
+                    </h4>
+                    <p class="text-muted mb-3">
+                        The Duel Lords tournament bot is running and ready to manage your BombSquad tournaments!
+                    </p>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="card bg-secondary">
+                                <div class="card-body">
+                                    <h6 class="text-success mb-2">
+                                        <i class="fas fa-server me-2"></i>
+                                        Server Information
+                                    </h6>
+                                    <p class="font-monospace text-warning mb-0">
+                                        18.228.228.44:3827
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function refreshData() {
+        fetch('/api/stats')
+            .then(response => response.json())
+            .then(data => {
+                // Update player count if element exists
+                const playerCountEl = document.querySelector('.text-warning');
+                if (playerCountEl && data.total_players !== undefined) {
+                    playerCountEl.textContent = data.total_players;
+                }
+            })
+            .catch(error => console.log('Error refreshing data:', error));
+    }
+</script>
+{% endblock %}
